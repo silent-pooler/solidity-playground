@@ -12,10 +12,7 @@ contract FallbackTest is Test {
 
     function setUp() public {
         fallbackContract = new Fallback();
-        console.log(
-            "Fallback contract deployed at: ",
-            address(fallbackContract)
-        );
+        console.log("Fallback contract deployed at: ", address(fallbackContract));
         vm.deal(user, STARTING_USER_BALANCE);
     }
 
@@ -29,7 +26,7 @@ contract FallbackTest is Test {
         uint256 contribution = fallbackContract.getContribution();
         assertEq(contribution, 1 wei);
 
-        (bool sent, ) = address(fallbackContract).call{value: 1 wei}("");
+        (bool sent,) = address(fallbackContract).call{value: 1 wei}("");
         require(sent, "Failed to send Ether");
 
         assertEq(fallbackContract.owner(), user);
@@ -46,14 +43,10 @@ contract FallbackTest is Test {
 
         vm.startPrank(user);
 
-        (bool sent, ) = address(fallbackContract).call{value: 1 wei}(
-            abi.encodeWithSignature("contribute()")
-        );
+        (bool sent,) = address(fallbackContract).call{value: 1 wei}(abi.encodeWithSignature("contribute()"));
         require(sent, "Failed to send Ether");
 
-        (bool success, bytes memory data) = address(fallbackContract).call(
-            abi.encodeWithSignature("getContribution()")
-        );
+        (bool success, bytes memory data) = address(fallbackContract).call(abi.encodeWithSignature("getContribution()"));
         // bytes4 getContributionSelector = fallbackContract
         //     .getContribution
         //     .selector;
@@ -68,14 +61,12 @@ contract FallbackTest is Test {
 
         assertEq(contribution, 1 wei);
 
-        (bool sent2, ) = address(fallbackContract).call{value: 1 wei}("");
+        (bool sent2,) = address(fallbackContract).call{value: 1 wei}("");
         require(sent2, "Failed to send Ether_2");
 
         assertEq(fallbackContract.owner(), user);
 
-        (bool success2, ) = address(fallbackContract).call(
-            abi.encodeWithSignature("withdraw()")
-        );
+        (bool success2,) = address(fallbackContract).call(abi.encodeWithSignature("withdraw()"));
         // bytes4 withdrawSelector = fallbackContract.withdraw.selector;
         // (bool success2, ) = address(fallbackContract).call(
         //     abi.encodeWithSelector(withdrawSelector)
